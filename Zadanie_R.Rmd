@@ -95,4 +95,4 @@ ggplot(U, aes(Politics, allArrests)) + geom_boxplot()
 ggplot(U, aes(Politics, Murder)) + geom_boxplot()
 ```
 
-Nakoľko dáta nie sú normálne rozdelené, nebudeme robiť ďalšie štatistické testy, avšak podľa zobrazených kvantilov môžeme pozorovať, že v štátoch, kde získali väčšinu Demokrati, bol výskyt trestnej činnosti najvyšší. Najnižší bol v štátoch, kde do Snemovne reprezentantov získali obe strany rovnaký počet mandátov.
+Nakoľko dáta nie sú normálne rozdelené, nebudeme robiť ďalšie štatistické testy, avšak podľa zobrazených kvantilov môžeme pozorovať, že v štátoch, kde získali väčšinu Demokrati, bol výskyt trestnej činnosti najvyšší. Nosenie zbraní teda môže mať pozitívny vplyv na výskyt trestnej činnosti. Najnižší bol v štátoch, kde do Snemovne reprezentantov získali obe strany rovnaký počet mandátov. To by mohlo poukazovať na to, že v takýchto politicky vyrovnaných štátov je spolunažívanie obyvateľstva celkovo lepšie.
