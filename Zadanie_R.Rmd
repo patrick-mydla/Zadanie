@@ -1,0 +1,98 @@
+---
+title: "Násilná trestná činnosť v USA"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+Hneď na úvod spustíme knižnicu `tidyverse`:
+
+```{r}
+library(tidyverse);
+```
+
+Pre svoje zadanie som sa rozhodol využiť štandardný R dataset, ktorý vystihuje smutnú realitu Spojených štátov - USArrests. Vyjaruje počet počet zatknutých páchateľov za násilné trestné činy v roku 1973 v jednotlivých štátoch USA.
+
+```{r}
+USArrests
+```
+
+## Oprava chýb v datasete
+
+Nakoľko v dokumentácii k tomuto datasetu sa spomína, že dáta nie sú korektné, upravíme tieto dáta pomocou kódu uvedeného v tejto dokumentácii. Z tohto dôvodu si vytvoríme korektný dataset UA.C, s ktorým budeme pracovať ďalej.
+
+```{r}
+UA.C <- USArrests
+UA.C["Maryland", "UrbanPop"] <- 76.6
+s5u <- c("Colorado", "Florida", "Mississippi", "Wyoming")
+s5d <- c("Nebraska", "Pennsylvania")
+UA.C[s5u, "UrbanPop"] <- UA.C[s5u, "UrbanPop"] + 0.5
+UA.C[s5d, "UrbanPop"] <- UA.C[s5d, "UrbanPop"] - 0.5
+```
+
+Teraz by už dáta mali byť korektné.
+
+Nakoľko názvy štátov sú v datasete ako popise riadkov, nastavíme ich ako samostatný stĺpec. Následne vytvoríme `tibble` z `UA.C`.
+
+```{r}
+U <- rownames_to_column(UA.C, var = "State")
+(U <- as_tibble(U))
+```
+
+## Vplyv mestskej populácie
+
+Ďalej sa zameriame na skúmanie možného vplyvu podielu mestskej populácie na výskyt jednotlivých násilných činov. Najskôr si vytvoríme stĺpec, kde spočítame výskyt všetkých typov činov:
+
+```{r}
+U <- (mutate(U,
+       allArrests = Murder + Assault + Rape
+))
+```
+
+Teraz môžeme vykresliť grafy závislosti celkového počtu zločninov, ako aj ich jednotlivých druhov, od podielu mestských obyvateľov v štáte:
+
+```{r}
+ggplot(data = U, aes(UrbanPop, allArrests)) + geom_point()
+ggplot(data = U, aes(UrbanPop, Murder)) + geom_point()
+ggplot(data = U, aes(UrbanPop, Assault)) + geom_point()
+ggplot(data = U, aes(UrbanPop, Rape)) + geom_point()
+```
+
+Zbežným pozorovaním sa nám javí, že existuje určitá závislosť medzi podielom mestskej populácie a páchaním trestnej činnosti. Pomocou korelačných testov vyšetríme koreláciu medzi nimi.
+
+```{r}
+cor.test(U$UrbanPop, U$allArrests)
+cor.test(U$UrbanPop, U$Murder)
+cor.test(U$UrbanPop, U$Assault)
+cor.test(U$UrbanPop, U$Rape)
+```
+
+Pri 95-percentnom intervale spoľahlivosti vylučujeme nulovú hypotézu (že veličiny nie sú korelované) a prijímame alternatívnu hypotézu, že tieto veličiny korelované, pre celkový počet trestných činov (allArrests), napadnutia (Assault) a znásilnenia (Rape).
+
+## Vplyv politickej orientácie obyvateľov
+
+Nakoľko v USA existujú v podstate iba dve politické strany (Republikáni a Demokrati), pričom Republikáni skôr konzervatívnejší a sú zástancami práva na nosenie zbrane, Demokrati ako ľavicovo orientovaní si na toto právo až tak nepotrpia. Preto som sa rozhodol zanalyzovať vplyv politickej orientácie obyvateľov štátov na výskyt násilných trestných činov. Ako kritérium som zvolil výsledky volieb do Snemovne reprezentantov z novembra 1972. Víťaznú stranu v jednotlivých štátoch som spracoval do samostatnej tabuľky.
+
+```{r}
+library(readr)
+Elections_1972 <- read_delim("https://raw.githubusercontent.com/patrick-mydla/Zadanie/master/Elections_1972.txt", 
+    "\t", escape_double = FALSE, col_names = FALSE, 
+    trim_ws = TRUE)
+View(Elections_1972)
+```
+
+Stĺpec s víťazmi priradíme do pôvodnej tabuľky `U`:
+
+```{r}
+(U <- mutate(U, Politics = Elections_1972$X2))
+```
+
+Budeme porovnávať vzťah medzi politickou orientáciou a celkovým počtom zločinov, následne urobíme porovnanie iba s vraždami. Využijeme na to boxploty:
+
+```{r}
+ggplot(U, aes(Politics, allArrests)) + geom_boxplot()
+ggplot(U, aes(Politics, Murder)) + geom_boxplot()
+```
+
+Nakoľko dáta nie sú normálne rozdelené, nebudeme robiť ďalšie štatistické testy, avšak podľa zobrazených kvantilov môžeme pozorovať, že v štátoch, kde získali väčšinu Demokrati, bol výskyt trestnej činnosti najvyšší. Najnižší bol v štátoch, kde do Snemovne reprezentantov získali obe strany rovnaký počet mandátov.
