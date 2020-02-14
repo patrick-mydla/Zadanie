@@ -1,0 +1,50 @@
+Alabama	Democratic
+Alaska	Democratic
+Arizona	Republican
+Arkansas	Democratic
+California	Democratic
+Colorado	Republican
+Connecticut	Democratic
+Delaware	Republican
+Florida	Democratic
+Georgia	Democratic
+Hawaii	Democratic
+Idaho	Republican
+Illinois	Republican
+Indiana	Republican
+Iowa	Tied
+Kansas	Republican
+Kentucky	Democratic
+Louisiana	Democratic
+Maine	Democratic
+Maryland	Tied
+Massachusetts	Democratic
+Michigan	Republican
+Minnesota	Tied
+Mississippi	Democratic
+Missouri	Democratic
+Montana	Tied
+Nebraska	Republican
+Nevada	Democratic
+New Hampshire	Republican
+New Jersey	Democratic
+New Mexico	Tied
+New York	Democratic
+North Carolina	Democratic
+North Dakota	Tied
+Ohio	Republican
+Oklahoma	Democratic
+Oregon	Tied
+Pennsylvania	Democratic
+Rhode Island	Democratic
+South Carolina	Democratic
+South Dakota	Democratic
+Tennessee	Republican
+Texas	Democratic
+Utah	Democratic
+Vermont	Republican
+Virginia	Republican
+Washington	Democratic
+West Virginia	Democratic
+Wisconsin	Democratic
+Wyoming	Democratic
